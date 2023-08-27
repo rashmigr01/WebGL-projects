@@ -301,23 +301,23 @@ function drawFloor() {
 
     //Line 1
     pushMatrix(matrixStack, mMatrix);
-    color = [1.0, 1.0, 1.0, 1.0];
+    color = [0.604, 0.678, 0.878, 1.0];
     mMatrix = mat4.scale(mMatrix, [0.4, 0.004, 1.0]);
-    mMatrix = mat4.translate(mMatrix, [0.1, -20.0, 0.0]);
+    mMatrix = mat4.translate(mMatrix, [0.1, -19.0, 0.0]);
     drawSquare(color, mMatrix);
     mMatrix = popMatrix(matrixStack);
     //Line 2
     pushMatrix(matrixStack, mMatrix);
-    color = [1.0, 1.0, 1.0, 1.0];
+    color = [0.604, 0.678, 0.878, 1.0];
     mMatrix = mat4.scale(mMatrix, [0.4, 0.004, 1.0]);
-    mMatrix = mat4.translate(mMatrix, [1.75, -40.0, 0.0]);
+    mMatrix = mat4.translate(mMatrix, [1.75, -50.0, 0.0]);
     drawSquare(color, mMatrix);
     mMatrix = popMatrix(matrixStack);
     //Line 3
     pushMatrix(matrixStack, mMatrix);
-    color = [1.0, 1.0, 1.0, 1.0];
+    color = [0.604, 0.678, 0.878, 1.0];
     mMatrix = mat4.scale(mMatrix, [0.4, 0.004, 1.0]);
-    mMatrix = mat4.translate(mMatrix, [-1.75, -30.0, 0.0]);
+    mMatrix = mat4.translate(mMatrix, [-1.75, -35.0, 0.0]);
     drawSquare(color, mMatrix);
     mMatrix = popMatrix(matrixStack);
 }
@@ -1228,7 +1228,7 @@ function SolidView() {
 //List of colours used:
 
 //River: rgba(42,100,246,255) = (0.165, 0.392, 0.965, 1.0)
-//River Lines: rgba(109,152,238,255) = (0.427, 0.596, 0.933, 1.0) // went with (1.0, 1.0, 1.0, 1.0)
+//River Lines: rgba(109,152,238,255) = (0.427, 0.596, 0.933, 1.0) // opted for (0.604, 0.678, 0.878, 1.0)
 //Greenary: rgba(104,226,138,255) = (0.408, 0.886, 0.541, 1.0)
 //Greenary road: rgba(120,177,72,255) = (0.471, 0.694, 0.282, 1.0)
 //Bush Middle: rgba(67,151,42,255) = (0.263, 0.592, 0.165, 1.0)
