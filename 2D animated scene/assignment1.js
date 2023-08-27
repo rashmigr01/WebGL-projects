@@ -6,6 +6,12 @@ var gl;
 var color;
 var matrixStack = [];
 
+var animation;
+var boat_x;
+var sun_x;
+var windmill1_x;
+var windmill2_x;
+
 var mMatrix = mat4.create();
 var uMMatrixLocation;
 
@@ -690,7 +696,7 @@ function drawBoat() {
 
 ////////////////////////////////////////////////////////////////////////
 
-function drawWindmill() {
+function drawWindmillpoles() {
     //Windmill left - trunk
     pushMatrix(matrixStack, mMatrix);
     color = [0.2, 0.2, 0.2, 1.0];
@@ -699,6 +705,18 @@ function drawWindmill() {
     drawSquare(color, mMatrix);
     mMatrix = popMatrix(matrixStack);
 
+    //Windmill right - trunk
+    pushMatrix(matrixStack, mMatrix);
+    color = [0.2, 0.2, 0.2, 1.0];
+    mMatrix = mat4.translate(mMatrix, [0.625, -0.175, 0]);
+    mMatrix = mat4.scale(mMatrix, [0.04, 0.5, 0]);
+    drawSquare(color, mMatrix);
+    mMatrix = popMatrix(matrixStack);
+}
+
+////////////////////////////////////////////////////////////////////////
+
+function drawWindmill1() {
     //Windmill left - wing1
     pushMatrix(matrixStack, mMatrix);
     color = [0.702, 0.702, 0.224, 1.0];
@@ -742,15 +760,11 @@ function drawWindmill() {
     mMatrix = mat4.scale(mMatrix, [0.03, 0.03, 0]);
     drawCircle(color, mMatrix);
     mMatrix = popMatrix(matrixStack);
+}
 
-    //Windmill right - trunk
-    pushMatrix(matrixStack, mMatrix);
-    color = [0.2, 0.2, 0.2, 1.0];
-    mMatrix = mat4.translate(mMatrix, [0.625, -0.175, 0]);
-    mMatrix = mat4.scale(mMatrix, [0.04, 0.5, 0]);
-    drawSquare(color, mMatrix);
-    mMatrix = popMatrix(matrixStack);
+////////////////////////////////////////////////////////////////////////
 
+function drawWindmill2() {
     //Windmill right - wing1
     pushMatrix(matrixStack, mMatrix);
     color = [0.702, 0.702, 0.224, 1.0];
@@ -1081,24 +1095,93 @@ function drawBottomElements() {
 
 function drawScene() {
   gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-  gl.clearColor(1.0, 1.0, 1.0, 1.0);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  mat4.identity(mMatrix);
+  boat_x = -0.8;
+  sun_x = 0.0;
+  windmill1_x = 0.0;
+  windmill2_x = 0.0;
 
-  drawTop();
-  drawFloor();
-  drawClouds_Birds();
+  if (animation) {
+    window.cancelAnimationFrame(animation);
+  }
 
-  pushMatrix(matrixStack, mMatrix);
-  //Apply x-translation from -0.75 to 0.625
-  mMatrix = mat4.translate(mMatrix, [0.625, 0, 0]);
-  drawBoat();
-  mMatrix = popMatrix(matrixStack);
+  var animate = function() {
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    mat4.identity(mMatrix);
+    drawTop();
+    drawFloor();
+    drawClouds_Birds();
 
-  drawWindmill();
-  drawSun();
-  drawBottomElements();
+    //Boat Animation code begins
+    pushMatrix(matrixStack, mMatrix);
+
+    mat4.identity(mMatrix);
+
+    const animationDist = 1.35;
+    const animationSpeed = 0.3;
+
+    boat_x = -0.75 + animationDist * 0.5 * (1 + Math.sin(performance.now() * animationSpeed * 0.001));
+    mMatrix = mat4.translate(mMatrix, [boat_x, 0, 0]);
+    drawBoat();
+
+    mMatrix = popMatrix(matrixStack);
+    //Boat Animation code ends
+
+    drawWindmillpoles();
+
+    //Windmill 1 animation begins
+    pushMatrix(matrixStack, mMatrix);
+
+    mat4.identity(mMatrix);
+
+    windmill1_x -= 2.0;
+    pushMatrix(matrixStack, mMatrix);
+    mMatrix = mat4.translate(mMatrix, [-0.46, 0.1, 0]);
+    mMatrix = mat4.rotate(mMatrix, degToRad(windmill1_x), [0.0, 0.0, 1.0]);
+    mMatrix = mat4.translate(mMatrix, [0.46, -0.1, 0]);
+    drawWindmill1();
+    mMatrix = popMatrix(matrixStack);    
+
+    mMatrix = popMatrix(matrixStack);
+    //WIndmill 1 animation ends
+
+    //Windmill 2 animation begins
+    pushMatrix(matrixStack, mMatrix);
+
+    mat4.identity(mMatrix);
+
+    windmill2_x -= 2.0;
+    pushMatrix(matrixStack, mMatrix);
+    mMatrix = mat4.translate(mMatrix, [0.625, 0.1, 0]);
+    mMatrix = mat4.rotate(mMatrix, degToRad(windmill2_x), [0.0, 0.0, 1.0]);
+    mMatrix = mat4.translate(mMatrix, [-0.625, -0.1, 0]);
+    drawWindmill2();
+    mMatrix = popMatrix(matrixStack);    
+
+    mMatrix = popMatrix(matrixStack);
+    //WIndmill 2 animation ends
+
+    //Sun Animation code begins
+    pushMatrix(matrixStack, mMatrix);
+
+    mat4.identity(mMatrix);
+
+    sun_x += 0.5;
+    pushMatrix(matrixStack, mMatrix);
+    mMatrix = mat4.translate(mMatrix, [-0.7, 0.8, 0]);
+    mMatrix = mat4.rotate(mMatrix, degToRad(sun_x), [0.0, 0.0, 1.0]);
+    mMatrix = mat4.translate(mMatrix, [0.7, -0.8, 0]);
+    drawSun();
+    mMatrix = popMatrix(matrixStack);
+
+    mMatrix = popMatrix(matrixStack);
+    //Sun Animation code ends
+
+    drawBottomElements();
+    animation = window.requestAnimationFrame(animate);
+  };
+  animate();
 }
 
 ////////////////////////////////////////////////////////////////////////
