@@ -30,7 +30,7 @@ uniform mat4 uMMatrix;
 
 void main() {
   gl_Position = uMMatrix*vec4(aPosition,0.0,1.0);
-  gl_PointSize = 10.0;
+  gl_PointSize = 2.5;
 }`;
 
 const fragShaderCode = `#version 300 es
